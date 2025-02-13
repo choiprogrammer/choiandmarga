@@ -11,3 +11,15 @@ noButton.addEventListener('mouseover', () => {
 yesButton.addEventListener('click', () => {
     backgroundMusic.play();
 });
+
+window.addEventListener('load', function() {
+document.getElementById('background-music').play();
+});
+
+document.querySelector('.yes-button').addEventListener('click', function() {
+document.body.style.transition = 'all 2s';
+document.body.style.transform = 'translateY(100vh)';
+setTimeout(function() {
+    document.body.innerHTML = '<h1 style="text-align: center; margin-top: 50vh;">I LOVE YOU BUNKY!</h1>';
+}, 2000);
+});
