@@ -1,13 +1,13 @@
-function check() {
-    if ( document.forms[0].elements[0].checked == true && document.forms[0].elements[1].checked == true && document.forms[0].elements[2].checked == true ) {
-      if ( ! $('.wrapper').hasClass('throb')) {
-          // Do things on Nav Close
-          $('.wrapper').addClass('throb');
-      } 
-    } else {
-      if ($('.wrapper').hasClass('throb')) {
-          // Do things on Nav Close
-          $('.wrapper').removeClass('throb');
-      }
-    }
-   }
+const noButton = document.querySelector('.no-button');
+const yesButton = document.querySelector('.yes-button');
+const backgroundMusic = document.getElementById('background-music');
+
+noButton.addEventListener('mouseover', () => {
+    const offsetX = Math.random() * 200 - 100;
+    const offsetY = Math.random() * 200 - 100;
+    noButton.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+});
+
+yesButton.addEventListener('click', () => {
+    backgroundMusic.play();
+});
