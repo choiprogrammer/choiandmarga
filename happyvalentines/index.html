@@ -8,13 +8,14 @@
         body {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             height: 100vh;
             margin: 0;
             background-color: #ffe6e6;
             font-family: 'Comic Sans MS', cursive, sans-serif;
             white-space: pre;
+            overflow: hidden;
         }
         .ascii-art {
             text-align: center;
@@ -62,47 +63,18 @@
             color: white;
             position: relative;
         }
-        .confetti {
+        .ascii-heart {
             position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #ff66b2;
-            animation: confetti-fall 3s linear infinite;
-        }
-        @keyframes confetti-fall {
-            0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(100vh) rotate(360deg); }
-        }
-        .hearts {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        .hearts::before, .hearts::after {
-            content: '❤️';
-            position: absolute;
-            animation: float 5s infinite;
             font-size: 24px;
+            animation: explode 1s ease-out forwards;
         }
-        .hearts::before {
-            left: 10%;
-            animation-delay: 0s;
-        }
-        .hearts::after {
-            left: 80%;
-            animation-delay: 2.5s;
-        }
-        @keyframes float {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-100vh); opacity: 0; }
+        @keyframes explode {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <div class="hearts"></div>
     <div class="ascii-art">
         ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠀⠀⠀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
         ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⢠⠿⠷⣭⣶⣯⣥⣶⣾⣿⠀⠀⠀⠀⢠⠖⣒⡒⢢⣄⡴⠒⢢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -145,9 +117,14 @@
             <button class="no-button">No</button>
         </div>
     </div>
+    <audio id="background-music" loop>
+        <source src="your-music-file.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
     <script>
         const noButton = document.querySelector('.no-button');
         const yesButton = document.querySelector('.yes-button');
+        const backgroundMusic = document.getElementById('background-music');
 
         noButton.addEventListener('mouseover', () => {
             const offsetX = Math.random() * 200 - 100;
@@ -156,14 +133,37 @@
         });
 
         yesButton.addEventListener('click', () => {
-            for (let i = 0; i < 100; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                confetti.style.left = `${Math.random() * 100}vw`;
-                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                document.body.appendChild(confetti);
-                setTimeout(() => confetti.remove(), 3000);
-            }
+            const hearts = [
+                '⠀⠀⠀⠀    ⠀⢀⣤⣄',
+                '⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⣿⡆ ⣠⣶⣿⣶⡀',
+                '⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿',
+                '⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏',
+                '⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⣿⣿⠋',
+                '⠀⠀⠀⠀⣾⣿⣿⣧⠀⠻⣿⣿⠿⠉',
+                '⣰⣿⣿⣿⣿⣿⣿⣿',
+                '⠸⣿⣿⣿⣿⣿⣿⠏',
+                '⠀⠈⠛⠿⣿⣿⡟',
+                '⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⣶⣶⣦⠀⠀',
+                '⠀⠀⣠⣤⣤⣄⣀⣾⣿⠟⠛⠻⢿⣷⠀',
+                '⢰⣿⡿⠛⠙⠻⣿⣿⠁⠀⠀⠀⢸⣿⡇',
+                '⢿⣿⣇⠀⠀⠀⠈⠏⠀⠀⠀⠀⣼⣿⠀',
+                '⠀⠻⣿⣷⣦⣤⣀⠀⠀⠀⠀⣾⡿⠃⠀',
+                '⠀⠀⠀⠀⠉⠉⠻⣿⣄⣴⣿⠟⠀⠀⠀',
+                '⠀⠀⠀⠀⠀⠀⠀⣿⡿⠟⠁⠀⠀⠀⠀'
+            ];
+
+            hearts.forEach((heart, index) => {
+                const heartElement = document.createElement('div');
+                heartElement.classList.add('ascii-heart');
+                heartElement.style.left = `${yesButton.offsetLeft + yesButton.offsetWidth / 2}px`;
+                heartElement.style.top = `${yesButton.offsetTop + yesButton.offsetHeight / 2}px`;
+                heartElement.style.animationDelay = `${index * 0.1}s`;
+                heartElement.textContent = heart;
+                document.body.appendChild(heartElement);
+                setTimeout(() => heartElement.remove(), 1000);
+            });
+
+            backgroundMusic.play();
         });
     </script>
 </body>
